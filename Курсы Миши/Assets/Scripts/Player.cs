@@ -10,7 +10,9 @@ public class Player : CharacterBase, IDamageDealer, IDamageReceiver // Капс�
     [SerializeField] private float _sideSpeed = 10f;
     [SerializeField] private float _jumpHeight = 3f;
     [SerializeField] private float _rotateSpeed = 50f;
-    [SerializeField] private GameObject Weapon; 
+    [SerializeField] private GameObject _weapon; 
+    [SerializeField] private Transform _bulletSpawnPoint;
+
 
     
     private Vector3 _velosity;
@@ -58,7 +60,6 @@ public class Player : CharacterBase, IDamageDealer, IDamageReceiver // Капс�
         if (isGrounded && Input.GetButtonDown("Jump"))
         {
             _velosity.y += Mathf.Sqrt(_jumpHeight * -3.0f * Physics.gravity.y);
-            Debug.Log(_velosity.y);
         }
 
         var move = _velosity * Time.deltaTime;
@@ -82,17 +83,15 @@ public class Player : CharacterBase, IDamageDealer, IDamageReceiver // Капс�
     {
         Damage damage = null;
         
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.R))
         { 
             damage= new ElementalDamage(ElementalDamageType.Fire, 20 );
         }
-
+    
         if (damage != null)
         {
-            //Instantiate(Weapon);
-            
+            Instantiate(_weapon, _bulletSpawnPoint.position, this.transform.rotation ); 
         }
-        
     }
 
     private void FixedUpdate()

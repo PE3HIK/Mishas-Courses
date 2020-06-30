@@ -563,7 +563,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 949777753}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1082112043}
@@ -718,7 +718,8 @@ MonoBehaviour:
   _sideSpeed: 10
   _jumpHeight: 3
   _rotateSpeed: 50
-  Weapon: {fileID: 6024819641584531268, guid: 9f7664c0def24fb4cb5b96b8b11a5086, type: 3}
+  _weapon: {fileID: 6024819641584531268, guid: 9f7664c0def24fb4cb5b96b8b11a5086, type: 3}
+  _bulletSpawnPoint: {fileID: 949777754}
 --- !u!54 &1082112045
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -24,7 +24,7 @@ public class BulletRun : MonoBehaviour
 
     private void Move()
     {
-        transform.position += Vector3.forward * (Time.deltaTime * _speed); // тут не могу понять как написать движение вдоль форворда пули
+        transform.position += transform.forward * (Time.deltaTime * _speed); // тут не могу понять как написать движение вдоль форворда пули
         _progress += Time.deltaTime * _speed;
 
         if (_progress >= _range)

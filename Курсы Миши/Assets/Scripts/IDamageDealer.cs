@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IDamageDealer 
 {
-    void DealDamage(IDamageReceiver receiver); 
+    void DealDamage<T>(IDamageReceiver receiver, T damage) where T : Damage;
 }

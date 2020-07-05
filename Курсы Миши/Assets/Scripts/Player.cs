@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(CharacterController))]
 public class Player : CharacterBase, IDamageDealer, IDamageReceiver // Капсуль, двигается, может прыгать
@@ -10,16 +11,16 @@ public class Player : CharacterBase, IDamageDealer, IDamageReceiver // Капс�
     [SerializeField] private float _sideSpeed = 10f;
     [SerializeField] private float _jumpHeight = 3f;
     [SerializeField] private float _rotateSpeed = 50f;
-    [SerializeField] private GameObject _weapon; 
+    [FormerlySerializedAs("_weapon")] [SerializeField] private BulletRun _bulletPrefab; 
     [SerializeField] private Transform _bulletSpawnPoint;
 
+    private Dictionary<BulletRun, Damage> _activeSkills = new Dictionary<BulletRun, Damage>();
 
-    
     private Vector3 _velosity;
 
-    public void DealDamage(IDamageReceiver receiver)
+    public void DealDamage<T>(IDamageReceiver receiver, T damage) where T : Damage
     {
-        receiver.ReceiveDamage(this, new Damage(15));
+        receiver.ReceiveDamage(this, damage);
     }
     public void ReceiveDamage<T>(IDamageDealer dealer, T damage) where T : Damage
     {
@@ -90,8 +91,22 @@ public class Player : CharacterBase, IDamageDealer, IDamageReceiver // Капс�
     
         if (damage != null)
         {
-            Instantiate(_weapon, _bulletSpawnPoint.position, this.transform.rotation ); 
+            var bullet = Instantiate(_bulletPrefab, _bulletSpawnPoint.position, this.transform.rotation);
+            bullet.Hited += BulletOnHited;
+            _activeSkills.Add(bullet, damage);
         }
+    }
+
+    private void BulletOnHited(BulletRun bullet, GameObject target)
+    {
+        bullet.Hited -= BulletOnHited;
+        var receiver = target.GetComponent<IDamageReceiver>();
+        if (receiver != null)
+        {
+            DealDamage(receiver, _activeSkills[bullet]);
+            _activeSkills.Remove(bullet); 
+        }
+
     }
 
     private void FixedUpdate()

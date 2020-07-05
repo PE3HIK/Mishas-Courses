@@ -7,14 +7,14 @@ public class BulletRun : MonoBehaviour
     [SerializeField] private float _speed;
     [SerializeField] private float _range;
     private float _progress; 
-    public event Action<GameObject> Destroyed;
+    public event Action<BulletRun, GameObject> Hited;
 
     private IEnumerator Start()
     {
         while (_progress < _range)
         {
             yield return null;
-            transform.position += transform.forward * (Time.deltaTime * _speed); // тут не могу понять как написать движение вдоль форворда 
+            transform.position += transform.forward * (Time.deltaTime * _speed); 
             _progress += Time.deltaTime * _speed;
         }
         Destroy(gameObject);
@@ -22,7 +22,7 @@ public class BulletRun : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Destroyed?.Invoke(other.gameObject);
+        Hited?.Invoke(this, other.gameObject);
         Destroy(gameObject);
     }
 }

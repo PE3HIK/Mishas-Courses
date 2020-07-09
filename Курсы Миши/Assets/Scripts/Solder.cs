@@ -1,6 +1,7 @@
 ﻿
     using UnityEngine;
 
+    
     public class Solder : Enemy, IDamageDealer, IDamageReceiver // может двигаться только по гор/вертикали 
     {
 
@@ -25,5 +26,9 @@
         protected override void Move()
         {
             throw new System.NotImplementedException();
+        }
+
+        public void DealDamage<T>(IDamageReceiver receiver, T damage) where T : Damage
+        {
         }
     }

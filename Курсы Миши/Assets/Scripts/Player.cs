@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -15,8 +16,12 @@ public class Player : CharacterBase, IDamageDealer, IDamageReceiver // Капс�
     [SerializeField] private Transform _bulletSpawnPoint;
 
     private Dictionary<BulletRun, Damage> _activeSkills = new Dictionary<BulletRun, Damage>();
-
+    
     private Vector3 _velosity;
+
+
+    // Action == Method (){} 
+    // Action<float> == Method (float i){}
 
     public void DealDamage<T>(IDamageReceiver receiver, T damage) where T : Damage
     {
@@ -97,6 +102,20 @@ public class Player : CharacterBase, IDamageDealer, IDamageReceiver // Капс�
         }
     }
 
+    private IEnumerator TimerRoutine(Action onTimerEnd, float time) // ротина - это то, что должно быть выполенно в корутине 
+    {
+        var tick = 1; 
+
+        while (time > 0)
+        {
+            yield return new WaitForSeconds(tick);
+            time -= tick; 
+        }
+        
+        onTimerEnd?.Invoke();
+    }
+    
+    
     private void BulletOnHited(BulletRun bullet, GameObject target)
     {
         bullet.Hited -= BulletOnHited;
@@ -106,7 +125,10 @@ public class Player : CharacterBase, IDamageDealer, IDamageReceiver // Капс�
             DealDamage(receiver, _activeSkills[bullet]);
             _activeSkills.Remove(bullet); 
         }
+    }
 
+    private void Start()
+    {
     }
 
     private void FixedUpdate()

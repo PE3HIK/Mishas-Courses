@@ -7,7 +7,7 @@ public class BulletRun : MonoBehaviour
     [SerializeField] private float _speed;
     [SerializeField] private float _range;
     private float _progress; 
-    public event Action<BulletRun, GameObject> Hited;
+    public event Action <BulletRun, GameObject> Hited; // дженерик-ивент, с параметрами "BulletRun" и "GameObject"
 
     private IEnumerator Start()
     {

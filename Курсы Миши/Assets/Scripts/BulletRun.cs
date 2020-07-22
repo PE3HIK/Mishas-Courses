@@ -2,12 +2,16 @@
 using System.Collections;
 using UnityEngine;
 
-public class BulletRun : MonoBehaviour
+public class BulletRun : MonoBehaviour, IDamageDealer
 {
     [SerializeField] private float _speed;
     [SerializeField] private float _range;
-    private float _progress; 
-    public event Action <BulletRun, GameObject> Hited; // дженерик-ивент, с параметрами "BulletRun" и "GameObject"
+    private float _progress;
+
+    private IDamageDealer _dealer;
+    private Damage _damage;
+    
+    public event Action<BulletRun> Destroyed; 
 
     private IEnumerator Start()
     {
@@ -22,7 +26,27 @@ public class BulletRun : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Hited?.Invoke(this, other.gameObject);
+        var recever = other.GetComponent<IDamageReceiver>();
+        if (recever!= null)
+        {
+            DealDamage(recever, _damage);
+        }
         Destroy(gameObject);
+    }
+
+    public void Initialization(IDamageDealer dealer, Damage damage)
+    {
+       _dealer = dealer;
+       _damage = damage; 
+    }
+
+    public void DealDamage<T>(IDamageReceiver receiver, T damage) where T : Damage
+    {
+        _dealer.DealDamage(receiver, damage);
+    }
+
+    private void OnDestroy()
+    {
+        Destroyed?.Invoke(this);
     }
 }

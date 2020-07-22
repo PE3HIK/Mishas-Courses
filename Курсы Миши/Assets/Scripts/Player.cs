@@ -16,6 +16,8 @@ public class Player : CharacterBase, IDamageDealer, IDamageReceiver // Капс�
     [SerializeField] private Transform _bulletSpawnPoint;
 
     private Dictionary<BulletRun, Damage> _activeSkills = new Dictionary<BulletRun, Damage>();
+
+    private bool _canShoot = true; 
     
     private Vector3 _velosity;
 
@@ -88,18 +90,42 @@ public class Player : CharacterBase, IDamageDealer, IDamageReceiver // Капс�
     private void BulletShoot()
     {
         Damage damage = null;
-        
-        if (Input.GetKeyDown(KeyCode.R))
-        { 
-            damage= new ElementalDamage(ElementalDamageType.Fire, 20 );
+
+        if (!_canShoot) 
+        {
+            return;
         }
-    
+
+        if (Input.GetKey(KeyCode.Alpha1))
+        { 
+            damage= new ElementalDamage(ElementalDamageType.Fire, 10 );
+        }
+        else if (Input.GetKey(KeyCode.Alpha2))
+        { 
+            damage= new ElementalDamage(ElementalDamageType.Air, 15 );
+        }
+        else if (Input.GetKey(KeyCode.Alpha3))
+        { 
+            damage= new ElementalDamage(ElementalDamageType.Earth, 20 );
+        }
+        else if (Input.GetKey(KeyCode.Alpha4))
+        { 
+            damage= new ElementalDamage(ElementalDamageType.Water, 25 );
+        }
+
         if (damage != null)
         {
             var bullet = Instantiate(_bulletPrefab, _bulletSpawnPoint.position, this.transform.rotation);
-            bullet.Hited += BulletOnHited;
-            _activeSkills.Add(bullet, damage);
+            bullet.Initialization(this, damage);
+            _canShoot = false; 
+            bullet.Destroyed += BulletOnDestroyed;
         }
+    }
+
+    private void BulletOnDestroyed(BulletRun bullet)
+    {
+        _canShoot = true;
+        bullet.Destroyed -= BulletOnDestroyed;
     }
 
     private IEnumerator TimerRoutine(Action onTimerEnd, float time) // ротина - это то, что должно быть выполенно в корутине 
@@ -114,27 +140,43 @@ public class Player : CharacterBase, IDamageDealer, IDamageReceiver // Капс�
         
         onTimerEnd?.Invoke();
     }
-    
-    
-    private void BulletOnHited(BulletRun bullet, GameObject target)
-    {
-        bullet.Hited -= BulletOnHited;
-        var receiver = target.GetComponent<IDamageReceiver>();
-        if (receiver != null)
-        {
-            DealDamage(receiver, _activeSkills[bullet]);
-            _activeSkills.Remove(bullet); 
-        }
-    }
-
-    private void Start()
-    {
-    }
 
     private void FixedUpdate()
     {
         Move();
         Rotate();
         BulletShoot();
+    }
+    
+    
+
+
+    private int _number; 
+    public int GetNumber() // get - переводится как "получить". 
+    {
+        return _number; 
+    }
+
+    public void SetNumber(int value) // set - переводится как "присвоить"
+    {
+        if (value != _number)
+            _number = value;
+        else
+        {
+            _number = 0; 
+        }
+    }
+
+    public int Number
+    {
+        set 
+        {
+            if (value != _number)
+                _number = value;
+            else
+            {
+                _number = 0; 
+            }
+        }
     }
 }

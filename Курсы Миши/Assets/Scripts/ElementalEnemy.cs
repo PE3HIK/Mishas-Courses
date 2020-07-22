@@ -18,6 +18,10 @@ public abstract class ElementalEnemy : Enemy, IDamageReceiver // двигает�
         {
             ReceivePhysicalDamage(damage); 
         }
+
+        Debug.Log(dealer);
+        Death();
+        
     }
 
     protected void ReceivePhysicalDamage(Damage damage)
@@ -37,13 +41,33 @@ public abstract class ElementalEnemy : Enemy, IDamageReceiver // двигает�
 
     protected virtual void ReceiveElementalDamage(ElementalDamage damage)
     {
+
+        var sign = damage.type == elementalType ? 1 : -1;
+
+        Hp = Mathf.Clamp(Hp + damage.amount*sign, 0, 100);
+        /*
         if (damage.type != elementalType)
         {
             Hp -= damage.amount;
-        }
-        else
+            
+        }else if (Hp < 100 )
         {
             Hp += damage.amount;
         }
+        else if (Hp >= 100 )
+        {
+            Hp += damage.amount;
+        }*/
+
     }
+
+    private void Death()
+    {
+            if (Hp <= 0)
+            {
+                Destroy(gameObject);
+            }
+    }
+    
+
 }

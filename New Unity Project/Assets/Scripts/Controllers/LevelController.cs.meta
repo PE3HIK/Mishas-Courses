@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 51d390a740e3403c93642cca1c215302
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _tileMatrixController: {instanceID: 0}
+  - _tileModel: {fileID: 6454465458209878584, guid: 93885fe52b897f1458112754c2ed87dd,
+      type: 3}
+  - _furniturModel: {fileID: 8209119454919945573, guid: 0f5470f956eeeb7488db1f86040efdcf,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
